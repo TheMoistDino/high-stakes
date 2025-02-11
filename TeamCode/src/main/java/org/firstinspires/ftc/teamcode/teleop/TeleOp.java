@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.control.HolonomicDrive;
+import org.firstinspires.ftc.teamcode.control.LynxModuleControl;
 import org.firstinspires.ftc.teamcode.control.MotorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 
@@ -16,6 +17,7 @@ public class TeleOp extends LinearOpMode
     //TankDrive tankDrive;
     ServoControl servoControl;
     MotorControl motorControl;
+    LynxModuleControl lynxModuleControl;
     //////////////////////
 
     double DRIVETRAIN_SPEED = 1.0;
@@ -40,6 +42,11 @@ public class TeleOp extends LinearOpMode
         motorControl = new MotorControl(hardwareMap, telemetry);
         //////////////////////
 
+        // For Bulk Reading
+        lynxModuleControl = new LynxModuleControl(hardwareMap, telemetry);
+        //////////////////////
+
+        lynxModuleControl.init();
 
         telemetry.addData("robot ready","");
         telemetry.update();
@@ -49,6 +56,8 @@ public class TeleOp extends LinearOpMode
 
         while(opModeIsActive())
         {
+            lynxModuleControl.resetCache();
+
             // For Holonomic Drive
             holonomicDrive.ActiveDriveRO(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, DRIVETRAIN_SPEED);
             //////////////////////
