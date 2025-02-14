@@ -66,45 +66,6 @@ public class SampleTeleOp extends LinearOpMode
 
             // Button to control the claw servo
 
-            if(gamepad1.right_bumper)
-            {
-                servoControl.GrabIntake();
-            }
-
-            if(gamepad1.left_bumper)
-            {
-                servoControl.GrabOuttake();
-            }
-
-            // Buttons to move lift up/down
-            if(gamepad1.y)
-            {
-                motorControl.MoveLift(MotorControl.LiftDirection.up, LIFT_SPEED);
-            }
-            else if(gamepad1.a)
-            {
-                motorControl.MoveLift(MotorControl.LiftDirection.down, LIFT_SPEED);
-            }
-            else if(!gamepad1.y && !gamepad1.a)
-            {
-                // Brake lift
-                motorControl.LockLift();
-            }
-
-            // Buttons to move arm up/down
-            if(gamepad1.dpad_up)
-            {
-                motorControl.MoveArm(MotorControl.ArmDirection.forward, LIFT_SPEED);
-            }
-            else if(gamepad1.dpad_down)
-            {
-                motorControl.MoveArm(MotorControl.ArmDirection.backward, LIFT_SPEED);
-            }
-            else if(!gamepad1.dpad_up && !gamepad1.dpad_down)
-            {
-                // Brake arm
-                motorControl.LockArm();
-            }
 
             telemetry.update();
         }

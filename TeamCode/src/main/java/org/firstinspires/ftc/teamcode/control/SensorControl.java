@@ -1,0 +1,103 @@
+package org.firstinspires.ftc.teamcode.control;
+
+import static org.firstinspires.ftc.teamcode.control.ServoControl.clamp;
+import static org.firstinspires.ftc.teamcode.control.ServoControl.clampClose;
+import static org.firstinspires.ftc.teamcode.control.ServoControl.isClamp;
+
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+public class SensorControl
+{
+    ///// Create Sensor Variables
+    public static ColorSensor colorSensor1, colorSensor2;
+    public static Rev2mDistanceSensor distanceSensor;
+    /////
+
+    ///// Name of Sensors on Driver Hub
+    private static final String colorSensor1Name = "colorSensor1",
+                                colorSensor2Name = "colorSensor2";
+    private static final String distanceSensorName = "distanceSensor";
+    /////
+
+    ///// Create Color Variables
+    public static int[] color1 = new int[3], color2 = new int[3];;
+    /////
+
+    ///// Create and Define Timer Variables
+    private final ElapsedTime clampTimer = new ElapsedTime();
+    private boolean lastClampState;
+    /////
+
+    ///// Extra variables
+    static Telemetry telemetry;
+    /////
+
+    public SensorControl(HardwareMap hardwareMap, Telemetry telemetry)
+    {
+        // Instantiate Sensor Objects
+        SensorControl.colorSensor1 = hardwareMap.get(ColorSensor.class, colorSensor1Name);
+        SensorControl.colorSensor2 = hardwareMap.get(ColorSensor.class, colorSensor2Name);
+        SensorControl.distanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, distanceSensorName);
+        // Instantiate Telemetry
+        SensorControl.telemetry = telemetry;
+
+        // Display Message on Screen
+        telemetry.addData("sensors", "initializing");
+
+    }
+
+    public void updateColor()
+    {
+        color1[0] = colorSensor1.red();
+        color1[1] = colorSensor1.green();
+        color1[2] = colorSensor1.blue();
+        color2[0] = colorSensor2.red();
+        color2[1] = colorSensor2.green();
+        color2[2] = colorSensor2.blue();
+    }
+
+    public void autoClamp()
+    {
+        if(isClamp != lastClampState)
+        {
+            clampTimer.reset();
+        }
+
+        if((distanceSensor.getDistance(DistanceUnit.CM) < 10) && ((clampTimer.seconds() >= 3) && (!isClamp))) {
+            clamp.setPosition(clampClose);
+            isClamp = true;
+
+            telemetry.addData("Clamp Status", "AUTO CLAMP");
+            telemetry.update();
+        }
+
+        lastClampState = isClamp;
+    }
+
+    public void redColorSort(boolean colorSort)
+    {
+        updateColor();
+        if(((color1[0] > (color1[1] - 20) && color1[0] > (color1[2] - 20))  // Check if color 1 is red
+                && (color2[0] > (color2[1] - 20) && color2[0] > (color2[2] - 20))) && colorSort)  // Check if color 2 is also red
+        {
+            telemetry.addData("Color Sort", "RED");
+        }
+    }
+
+    public void blueColorSort(boolean colorSort)
+    {
+        updateColor();
+        if(((color1[2] > (color1[0] - 20) && color1[2] > (color1[1] - 20))  // Check if color 1 is red
+                && (color2[2] > (color2[0] - 20) && color2[2] > (color2[1] - 20))) && colorSort)  // Check if color 2 is also red
+        {
+            telemetry.addData("Color Sort", "BLUE");
+        }
+    }
+
+}

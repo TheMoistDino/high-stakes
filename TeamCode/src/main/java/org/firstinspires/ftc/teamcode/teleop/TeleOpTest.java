@@ -17,8 +17,7 @@ import static org.firstinspires.ftc.teamcode.control.MotorControl.ArmDirection.b
 import static org.firstinspires.ftc.teamcode.control.MotorControl.ArmDirection.forward;
 import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftDirection.down;
 import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftDirection.up;
-import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftHeight.high_basket;
-import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftHeight.zero;
+import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftHeight.idle;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -81,16 +80,16 @@ public class TeleOpTest extends LinearOpMode
         gamepad.addAction(2, start, onPress, () -> liftSlow = !liftSlow);
         gamepad.addAction(2, b, onPress, () -> liftDebug = !liftDebug);
         gamepad.addAction(2, back, onPress, () -> {
-            MotorControl.liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            MotorControl.liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            MotorControl.intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            MotorControl.intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         });
 
         // Presets
         gamepad.addAction(2, dpad_right, onPress, () -> {
-            motor.LiftToPosition(high_basket, 4.5);
+            //motor.LiftToPosition(idle, 4.5);
         });
         gamepad.addAction(2, dpad_left, onPress, () -> {
-            motor.LiftToPosition(zero, 4.5);
+            //motor.LiftToPosition(zero, 4.5);
         });
 
         // Servo Control
@@ -104,17 +103,17 @@ public class TeleOpTest extends LinearOpMode
         // Motor Control
         // Buttons to move arm forward/backward
         gamepad.addAction(2, a, onButtonHold, () -> {
-            motor.ArmControl(forward, ARM_SPEED_MULTIPLIER);
+            //motor.ArmControl(forward, ARM_SPEED_MULTIPLIER);
         });
         gamepad.addAction(2, dpad_down, onButtonHold, () -> {
-            motor.ArmControl(backward, ARM_SPEED_MULTIPLIER);
+            //motor.ArmControl(backward, ARM_SPEED_MULTIPLIER);
         });
         // Buttons to move lift up/down
         gamepad.addAction(2, right_trigger, onButtonHold, (liftDebug || motor.currentLiftPos < motor.maxLiftPos), () -> {
-            motor.MoveLift(up, LIFT_SPEED_MULTIPLIER);
+            //motor.MoveLift(up, LIFT_SPEED_MULTIPLIER);
         });
         gamepad.addAction(2, left_trigger, onButtonHold, (liftDebug || motor.currentLiftPos > motor.minLiftPos), () -> {
-            motor.MoveLift(down, LIFT_SPEED_MULTIPLIER);
+            //motor.MoveLift(down, LIFT_SPEED_MULTIPLIER);
         });
         //////////////////////
 
@@ -139,13 +138,13 @@ public class TeleOpTest extends LinearOpMode
 
             if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0)
             {
-                motor.LockLift(); // Brake lift when no direction is specified
+                //motor.LockLift(); // Brake lift when no direction is specified
             }
 
             // If the lift is beyond the set min or max positions, return the lift to the nearest limit
             if ((motor.currentLiftPos < motor.minLiftPos || motor.currentLiftPos > motor.maxLiftPos) && (!liftDebug))
             {
-                motor.StopAndReturnLift();
+                //motor.StopAndReturnLift();
             }
 
 
@@ -159,10 +158,10 @@ public class TeleOpTest extends LinearOpMode
 
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
             telemetry.addData("Driving Speed", driveSlow ? "50%" : "100%");
-            telemetry.addData("Lift Position", MotorControl.liftLeft.getCurrentPosition());
+            telemetry.addData("Lift Position", MotorControl.intake.getCurrentPosition());
             telemetry.addData("Lift Debug Mode", liftDebug ? "On" : "Off");
             telemetry.addData("Lift Speed", liftSlow ? "50%" : "100%");
-            telemetry.addData("Arm Position", MotorControl.outtakeArm.getCurrentPosition());
+            telemetry.addData("Arm Position", MotorControl.lift.getCurrentPosition());
             telemetry.addData("Arm Speed", armSlow ? "50%" : "100%");
 
             telemetry.update();

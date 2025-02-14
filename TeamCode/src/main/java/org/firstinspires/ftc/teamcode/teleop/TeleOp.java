@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.control.AdvGamepad;
 import org.firstinspires.ftc.teamcode.control.HolonomicDrive;
 import org.firstinspires.ftc.teamcode.control.LynxModuleControl;
 import org.firstinspires.ftc.teamcode.control.MotorControl;
+import org.firstinspires.ftc.teamcode.control.SensorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 
 @Disabled
@@ -13,106 +15,88 @@ import org.firstinspires.ftc.teamcode.control.ServoControl;
 public class TeleOp extends LinearOpMode
 {
     // Variables for Method Calling
-    HolonomicDrive holonomicDrive;
+    HolonomicDrive drive;
     //TankDrive tankDrive;
-    ServoControl servoControl;
-    MotorControl motorControl;
-    LynxModuleControl lynxModuleControl;
+    ServoControl servo;
+    MotorControl motor;
+    SensorControl sensor;
+    LynxModuleControl lynxModule;
+    AdvGamepad gamepad;
     //////////////////////
 
-    double DRIVETRAIN_SPEED = 1.0;
-    double LIFT_SPEED = 1.0;
+    // Misc Variables
+    boolean isFieldOriented = false;
+    boolean colorSort = true;
+
 
     @Override
     public void runOpMode() throws InterruptedException
     {
         // For Holonomic Drive
-        holonomicDrive = new HolonomicDrive(hardwareMap, telemetry);
+        drive = new HolonomicDrive(hardwareMap, telemetry);
         //////////////////////
 
-        // For Tank Drive
-        //tankDrive = new TankDrive(hardwareMap, telemetry);
+        // For Servo Control (Clamp)
+        servo = new ServoControl(hardwareMap, telemetry);
         //////////////////////
 
-        // For Servo Control (Claws)
-        servoControl = new ServoControl(hardwareMap, telemetry);
+        // For Motor Control (Lady Brown Mech, Intake, Conveyor)
+        motor = new MotorControl(hardwareMap, telemetry);
         //////////////////////
 
-        // For Motor Control (Lift)
-        motorControl = new MotorControl(hardwareMap, telemetry);
+        // For Sensor Control (Color Sensor, Distance Sensor)
+        sensor = new SensorControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Bulk Reading
-        lynxModuleControl = new LynxModuleControl(hardwareMap, telemetry);
+        lynxModule = new LynxModuleControl(hardwareMap, telemetry);
+        lynxModule.init();
         //////////////////////
 
-        lynxModuleControl.init();
+        // For Gamepad State Storage
+        gamepad = new AdvGamepad(gamepad1, gamepad2);
+        //////////////////////
 
-        telemetry.addData("robot ready","");
+        // Initialize the map with lambda expressions for each action
+        // Toggles
+        gamepad.addAction(1, AdvGamepad.GamepadInput.back, AdvGamepad.InputType.onPress, () -> isFieldOriented = !isFieldOriented);
+        gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleClamp());
+        gamepad.addAction(1, AdvGamepad.GamepadInput.b, AdvGamepad.InputType.onPress, () -> colorSort = !colorSort);
+
+
+        telemetry.addData("Robot Status","Ready");
+        telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
         telemetry.update();
 
         // Wait for the play button to be pressed
         waitForStart();
 
+        // Start servos after the play button is pressed to avoid movement between AUTO and TELEOP periods
+        servo.StartServos();
+
         while(opModeIsActive())
         {
-            lynxModuleControl.resetCache();
+            // Clear the cache to avoid memory leaks and other issues (allows for bulk reading)
+            lynxModule.resetCache();
+            //////////////////////
+
+            // Gamepad controls are updated & executed
+            gamepad.updateGamepad(gamepad1, gamepad2);
+            //////////////////////
 
             // For Holonomic Drive
-            holonomicDrive.ActiveDriveRO(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, DRIVETRAIN_SPEED);
+            drive.ActiveDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, 1.0, isFieldOriented);
             //////////////////////
 
-            // For Tank Drive
-            //tankDrive.ActiveDrive(gamepad1.left_stick_y, gamepad1.right_stick_y);
+            // TeleOp Assist
+            sensor.autoClamp();
+            sensor.redColorSort(colorSort);
+            sensor.blueColorSort(colorSort);
             //////////////////////
 
-            // Button to slow down driving
-            DRIVETRAIN_SPEED = gamepad1.left_bumper ? 0.5 : 1.0;
-
-            // Button to slow down lift
-            LIFT_SPEED = gamepad2.left_bumper ? 0.5 : 1.0;
-
-            // Button to control the claw servo
-
-            if(gamepad1.right_bumper)
-            {
-                servoControl.GrabIntake();
-            }
-
-            if(gamepad1.left_bumper)
-            {
-                servoControl.GrabOuttake();
-            }
-
-            // Buttons to move lift up/down
-            if(gamepad1.y)
-            {
-                motorControl.MoveLift(MotorControl.LiftDirection.up, LIFT_SPEED);
-            }
-            else if(gamepad1.a)
-            {
-                motorControl.MoveLift(MotorControl.LiftDirection.down, LIFT_SPEED);
-            }
-            else if(!gamepad1.y && !gamepad1.a)
-            {
-                // Brake lift
-                motorControl.LockLift();
-            }
-
-            // Buttons to move arm up/down
-            if(gamepad1.dpad_up)
-            {
-                motorControl.MoveArm(MotorControl.ArmDirection.forward, LIFT_SPEED);
-            }
-            else if(gamepad1.dpad_down)
-            {
-                motorControl.MoveArm(MotorControl.ArmDirection.backward, LIFT_SPEED);
-            }
-            else if(!gamepad1.dpad_up && !gamepad1.dpad_down)
-            {
-                // Brake arm
-                motorControl.LockArm();
-            }
+            telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
+            telemetry.addData("Color Sort", colorSort);
+            telemetry.addData("Clamp Status", ServoControl.isClamp);
 
             telemetry.update();
         }
