@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -49,7 +48,7 @@ public class ServoControl
         StopServos();
 
         // Display Message on Screen
-        telemetry.addData("servos", "initializing");
+        telemetry.addData("Servo Status", "Initialized");
     }
 
     // This method is used to "turn on" the servos

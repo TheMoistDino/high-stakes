@@ -30,8 +30,9 @@ public class SensorControl
     /////
 
     ///// Create and Define Timer Variables
-    private final ElapsedTime clampTimer = new ElapsedTime();
+    private final ElapsedTime clampTimer = new ElapsedTime(), distanceTimer = new ElapsedTime();
     private boolean lastClampState;
+    private final double clampDelay = 500;
     /////
 
     ///// Extra variables
@@ -47,8 +48,12 @@ public class SensorControl
         // Instantiate Telemetry
         SensorControl.telemetry = telemetry;
 
+        // Start Timers
+        clampTimer.reset();
+        distanceTimer.reset();
+
         // Display Message on Screen
-        telemetry.addData("sensors", "initializing");
+        telemetry.addData("Sensor Status", "Initialized");
 
     }
 
@@ -69,10 +74,22 @@ public class SensorControl
             clampTimer.reset();
         }
 
-        if((distanceSensor.getDistance(DistanceUnit.CM) < 10) && ((clampTimer.seconds() >= 3) && (!isClamp))) {
+        if((distanceSensor.getDistance(DistanceUnit.CM) < 10) && ((clampTimer.seconds() >= 3) && (!isClamp)))
+        {
+            // Reset Timer
+            distanceTimer.reset();
+
+            // Clamp Delay
+            while(distanceTimer.milliseconds() < clampDelay)
+            {
+                telemetry.addData("Clamp Status", "Mobile Goal Detected");
+            }
+
+            // Close clamp
             clamp.setPosition(clampClose);
             isClamp = true;
 
+            // Display Message On Screen
             telemetry.addData("Clamp Status", "AUTO CLAMP");
             telemetry.update();
         }

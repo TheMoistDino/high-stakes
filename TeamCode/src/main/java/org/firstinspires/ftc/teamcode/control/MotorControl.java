@@ -102,7 +102,7 @@ public class MotorControl
         PIDController liftPIDController = new PIDController(liftPIDF[0], liftPIDF[1], liftPIDF[2]);
 
         // Display Message on Screen
-        telemetry.addData("motors", "initializing");
+        telemetry.addData("Motor Status", "Initialized");
     }
 
 

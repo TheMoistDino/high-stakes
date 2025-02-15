@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.control.AdvGamepad;
@@ -10,13 +9,11 @@ import org.firstinspires.ftc.teamcode.control.MotorControl;
 import org.firstinspires.ftc.teamcode.control.SensorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 
-@Disabled
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Sample TeleOp", group = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends LinearOpMode
 {
     // Variables for Method Calling
     HolonomicDrive drive;
-    //TankDrive tankDrive;
     ServoControl servo;
     MotorControl motor;
     SensorControl sensor;
@@ -94,6 +91,7 @@ public class TeleOp extends LinearOpMode
             sensor.blueColorSort(colorSort);
             //////////////////////
 
+            telemetry.addData("Robot Status","TELEOP Running");
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
             telemetry.addData("Color Sort", colorSort);
             telemetry.addData("Clamp Status", ServoControl.isClamp);

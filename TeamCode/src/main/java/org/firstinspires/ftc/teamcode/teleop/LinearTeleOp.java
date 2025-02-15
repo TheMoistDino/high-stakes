@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,7 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
 
 import java.util.List;
 
-@TeleOp(name = "TeleOp", group = "TeleOp")
+@Disabled
+@TeleOp(name = "LinearTeleOp", group = "TeleOp")
 public class LinearTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

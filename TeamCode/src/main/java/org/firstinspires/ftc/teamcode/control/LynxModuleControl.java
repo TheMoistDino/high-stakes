@@ -15,14 +15,20 @@ public class LynxModuleControl
 
     public LynxModuleControl(HardwareMap hardwareMap, Telemetry telemetry)
     {
+        // Instantiate LynxModule Objects
         LynxModuleControl.allHubs = hardwareMap.getAll(LynxModule.class);
+        // Instantiate Telemetry
         LynxModuleControl.telemetry = telemetry;
+
+        // Display Message on Screen
+        telemetry.addData("LynxModule Status", "Getting Ready...");
     }
 
     public void init(){
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
+        telemetry.addData("LynxModule Status", "Initialized");
     }
 
     public void resetCache()
