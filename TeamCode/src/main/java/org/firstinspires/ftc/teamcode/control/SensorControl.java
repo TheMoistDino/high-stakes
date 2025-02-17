@@ -91,10 +91,8 @@ public class SensorControl
 
             // Display Message On Screen
             telemetry.addData("Clamp Status", "AUTO CLAMP");
-            telemetry.addData("Distance", distanceSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
         }
-
+        telemetry.addData("Distance", distanceSensor.getDistance(DistanceUnit.CM));
         lastClampState = isClamp;
     }
 

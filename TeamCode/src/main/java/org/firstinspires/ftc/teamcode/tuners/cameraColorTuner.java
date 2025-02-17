@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.tuners;
 import android.graphics.Color;
 import android.util.Size;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -21,6 +23,7 @@ public class cameraColorTuner extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         PredominantColorProcessor colorSensor = new PredominantColorProcessor.Builder()
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-roi, roi, roi, -roi))
                 .setSwatches(
@@ -38,6 +41,7 @@ public class cameraColorTuner extends LinearOpMode
         while(opModeIsActive() || opModeInInit())
         {
             PredominantColorProcessor.Result result = colorSensor.getAnalysis();
+            FtcDashboard.getInstance().startCameraStream(portal, 20);
 
             // Display the Color Sensor result.
             telemetry.addData("Best Match:", result.closestSwatch);
@@ -50,6 +54,10 @@ public class cameraColorTuner extends LinearOpMode
             else if(result.closestSwatch == PredominantColorProcessor.Swatch.BLUE)
             {
                 telemetry.addData("Color Sort", "BLUE");
+            }
+            else
+            {
+                telemetry.addData("Color Sort", "NONE");
             }
 
             telemetry.update();

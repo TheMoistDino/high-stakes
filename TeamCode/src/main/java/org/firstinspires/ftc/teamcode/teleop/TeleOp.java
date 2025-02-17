@@ -96,7 +96,7 @@ public class TeleOp extends LinearOpMode
             //sensor.redColorSort(colorSort);
             //sensor.blueColorSort(colorSort);
             camera.redColorSort(colorSort);
-            camera.blueColorSort(colorSort);
+            //camera.blueColorSort(colorSort);
             //////////////////////
 
             telemetry.addData("Robot Status","TELEOP Running");

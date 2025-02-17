@@ -63,6 +63,10 @@ public class CameraControl
         {
             telemetry.addData("Color Sort", "RED");
         }
+        else
+        {
+            telemetry.addData("Color Sort", "NONE");
+        }
     }
 
     public void blueColorSort(boolean colorSort)
@@ -71,6 +75,10 @@ public class CameraControl
         if((result.closestSwatch == PredominantColorProcessor.Swatch.BLUE) && colorSort)
         {
             telemetry.addData("Color Sort", "BLUE");
+        }
+        else
+        {
+            telemetry.addData("Color Sort", "NONE");
         }
     }
 }
