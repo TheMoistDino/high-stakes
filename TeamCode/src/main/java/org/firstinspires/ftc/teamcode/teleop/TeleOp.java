@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.control.AdvGamepad;
+import org.firstinspires.ftc.teamcode.control.CameraControl;
 import org.firstinspires.ftc.teamcode.control.HolonomicDrive;
 import org.firstinspires.ftc.teamcode.control.LynxModuleControl;
 import org.firstinspires.ftc.teamcode.control.MotorControl;
@@ -17,6 +18,7 @@ public class TeleOp extends LinearOpMode
     ServoControl servo;
     MotorControl motor;
     SensorControl sensor;
+    CameraControl camera;
     LynxModuleControl lynxModule;
     AdvGamepad gamepad;
     //////////////////////
@@ -43,6 +45,10 @@ public class TeleOp extends LinearOpMode
 
         // For Sensor Control (Color Sensor, Distance Sensor)
         sensor = new SensorControl(hardwareMap, telemetry);
+        //////////////////////
+
+        // For Camera Control
+        camera = new CameraControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Bulk Reading
@@ -89,6 +95,8 @@ public class TeleOp extends LinearOpMode
             sensor.autoClamp();
             //sensor.redColorSort(colorSort);
             //sensor.blueColorSort(colorSort);
+            camera.redColorSort(colorSort);
+            camera.blueColorSort(colorSort);
             //////////////////////
 
             telemetry.addData("Robot Status","TELEOP Running");

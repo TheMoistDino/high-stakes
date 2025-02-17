@@ -21,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftHeight.idl
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.control.AdvGamepad;
@@ -29,7 +30,7 @@ import org.firstinspires.ftc.teamcode.control.MotorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 
 @Disabled
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Test (OLD)", group = "TeleOp")
+@TeleOp(name = "Test (OLD)", group = "TeleOp")
 public class TeleOpTest extends LinearOpMode
 {
     // Variables for Method Calling

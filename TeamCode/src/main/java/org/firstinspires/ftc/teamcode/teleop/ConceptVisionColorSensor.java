@@ -86,7 +86,8 @@ public class ConceptVisionColorSensor extends LinearOpMode
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0.1, 0.1, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.RED,
-                        PredominantColorProcessor.Swatch.BLUE)
+                        PredominantColorProcessor.Swatch.BLUE,
+                        PredominantColorProcessor.Swatch.WHITE)
                 .build();
 
         /*

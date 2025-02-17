@@ -32,7 +32,7 @@ public class SensorControl
     ///// Create and Define Timer Variables
     private final ElapsedTime clampTimer = new ElapsedTime(), distanceTimer = new ElapsedTime();
     private boolean lastClampState;
-    private final double clampDelay = 250;
+    private final double clampDelay = 125;
     /////
 
     ///// Extra variables
