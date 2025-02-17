@@ -38,7 +38,7 @@ public class TeleOp extends LinearOpMode
         //////////////////////
 
         // For Motor Control (Lady Brown Mech, Intake, Conveyor)
-        motor = new MotorControl(hardwareMap, telemetry);
+        // motor = new MotorControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Sensor Control (Color Sensor, Distance Sensor)
@@ -87,8 +87,8 @@ public class TeleOp extends LinearOpMode
 
             // TeleOp Assist
             sensor.autoClamp();
-            sensor.redColorSort(colorSort);
-            sensor.blueColorSort(colorSort);
+            //sensor.redColorSort(colorSort);
+            //sensor.blueColorSort(colorSort);
             //////////////////////
 
             telemetry.addData("Robot Status","TELEOP Running");

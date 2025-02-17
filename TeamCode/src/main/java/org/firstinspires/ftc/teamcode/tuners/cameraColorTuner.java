@@ -25,7 +25,6 @@ import org.opencv.core.Scalar;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Config
-@Disabled
 @TeleOp(name="Camera Color Tuner", group="Test")
 public class cameraColorTuner extends LinearOpMode
 {
@@ -105,12 +104,12 @@ public class cameraColorTuner extends LinearOpMode
                 FtcDashboard.getInstance().sendImage(processor.getLastFrame());
             }
 
-            percentMask = (int) (100 * Core.countNonZero(processor.peopleMask) / (processor.peopleMask.width() * processor.peopleMask.height()));
-            isPersonDetected = percentMask > 50;
+            //percentMask = (int) (100 * Core.countNonZero(processor.peopleMask) / (processor.peopleMask.width() * processor.peopleMask.height()));
+            //isPersonDetected = percentMask > 50;
 
             telemetry.addData("AverageColor: ", processor.getMeanColor().toString());
-            telemetry.addData("Percent Mask: ", percentMask);
-            telemetry.addData("Is Person Detected: ", isPersonDetected);
+            //telemetry.addData("Percent Mask: ", percentMask);
+            //telemetry.addData("Is Person Detected: ", isPersonDetected);
             telemetry.update();
             sleep(100);
         }

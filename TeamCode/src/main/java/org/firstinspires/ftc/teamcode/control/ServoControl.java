@@ -19,9 +19,8 @@ public class ServoControl
 
     ///// Create and Define Motion Variables
     public static boolean isClamp;
-    public enum Clamp {open, close}
-    static final double clampOpen = 0.0,
-                        clampClose = 0.2;
+    static final double clampOpen = 0.35,
+                        clampClose = 0.50;
     /////
 
     ///// Create and Define Timer Variables to let the servos have time to run to position

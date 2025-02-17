@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class HolonomicDrive
 {
@@ -27,8 +29,10 @@ public class HolonomicDrive
     /////
 
     ///// Create IMU/gyro variables
-    static BNO055IMU imu;
-    Orientation angles;
+    // static BNO055IMU imu;
+    static IMU imu;
+    // Orientation angles;
+    YawPitchRollAngles robotOrientation;
     double initYaw;
     double adjustedYaw;
 
@@ -85,17 +89,21 @@ public class HolonomicDrive
         HolonomicDrive.rightBack  = hardwareMap.get(DcMotor.class, rightBackName);
 
         // Instantiate IMU/gyro Objects
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+//        parameters.mode = BNO055IMU.SensorMode.IMU;
+//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        parameters.loggingEnabled = false;
 
-        HolonomicDrive.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        HolonomicDrive.imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(parameters);
 
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        initYaw = angles.firstAngle;
+        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        //initYaw = angles.firstAngle;
+
+        robotOrientation = imu.getRobotYawPitchRollAngles();
+        initYaw = robotOrientation.getYaw(AngleUnit.RADIANS);
 
         // Instantiate Telemetry
         HolonomicDrive.telemetry = telemetry;
@@ -185,10 +193,12 @@ public class HolonomicDrive
     // This method is used for field-oriented driving in TeleOp
     public void ActiveDriveFO(double leftStickX, double leftStickY, double rightStickX, double SPEED_MULTIPLIER)
     {
-        adjustedYaw = angles.firstAngle - initYaw;
+        // adjustedYaw = angles.firstAngle - initYaw;
+        adjustedYaw = robotOrientation.getYaw(AngleUnit.RADIANS) - initYaw;
 
         // toggle field/normal
-        double zeroedYaw = -initYaw + angles.firstAngle;
+        // double zeroedYaw = -initYaw + angles.firstAngle;
+        double zeroedYaw = -initYaw + robotOrientation.getYaw(AngleUnit.RADIANS);
 
         // Cool vector math to calculate power to the drive motors
         x    = leftStickX;

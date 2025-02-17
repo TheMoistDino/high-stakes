@@ -94,10 +94,10 @@ public class TeleOpTest extends LinearOpMode
 
         // Servo Control
         gamepad.addAction(2, right_bumper, onPress, () -> {
-            servo.GrabOuttake();
+            //servo.GrabOuttake();
         });
         gamepad.addAction(2, left_bumper, onPress, () -> {
-            servo.GrabIntake();
+            //servo.GrabIntake();
         });
 
         // Motor Control

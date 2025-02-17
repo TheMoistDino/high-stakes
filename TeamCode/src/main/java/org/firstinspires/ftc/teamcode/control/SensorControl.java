@@ -32,7 +32,7 @@ public class SensorControl
     ///// Create and Define Timer Variables
     private final ElapsedTime clampTimer = new ElapsedTime(), distanceTimer = new ElapsedTime();
     private boolean lastClampState;
-    private final double clampDelay = 500;
+    private final double clampDelay = 250;
     /////
 
     ///// Extra variables
@@ -74,7 +74,7 @@ public class SensorControl
             clampTimer.reset();
         }
 
-        if((distanceSensor.getDistance(DistanceUnit.CM) < 10) && ((clampTimer.seconds() >= 3) && (!isClamp)))
+        if((distanceSensor.getDistance(DistanceUnit.CM) < 10) && ((clampTimer.seconds() >= 1) && (!isClamp)))
         {
             // Reset Timer
             distanceTimer.reset();
@@ -91,6 +91,7 @@ public class SensorControl
 
             // Display Message On Screen
             telemetry.addData("Clamp Status", "AUTO CLAMP");
+            telemetry.addData("Distance", distanceSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
 
