@@ -89,7 +89,9 @@ public class HolonomicDrive
         HolonomicDrive.rightBack  = hardwareMap.get(DcMotor.class, rightBackName);
 
         // Instantiate IMU/gyro Objects
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
 //        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 //        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 //        parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -144,8 +146,6 @@ public class HolonomicDrive
     // This method is used for robot-oriented driving in TeleOp
     public void ActiveDriveRO(double leftStickX, double leftStickY, double rightStickX, double SPEED_MULTIPLIER)
     {
-        double max; // Limit motor's powers to 100%
-
         // Cool vector math to calculate power to the drive motors
         x    = leftStickX * 1.05;
         y    = -leftStickY;
@@ -157,7 +157,7 @@ public class HolonomicDrive
 
         double sin = Math.sin(theta - Math.PI/4);
         double cos = Math.cos(theta - Math.PI/4);
-        max = Math.max(Math.abs(sin), Math.abs(cos));
+        double max = Math.max(Math.abs(sin), Math.abs(cos));
 
         // Combine variables to find power and set the intended power
         target_leftFront_power  = (power * cos / max + turn);
@@ -193,41 +193,60 @@ public class HolonomicDrive
     // This method is used for field-oriented driving in TeleOp
     public void ActiveDriveFO(double leftStickX, double leftStickY, double rightStickX, double SPEED_MULTIPLIER)
     {
-        // adjustedYaw = angles.firstAngle - initYaw;
-        adjustedYaw = robotOrientation.getYaw(AngleUnit.RADIANS) - initYaw;
-
-        // toggle field/normal
-        // double zeroedYaw = -initYaw + angles.firstAngle;
-        double zeroedYaw = -initYaw + robotOrientation.getYaw(AngleUnit.RADIANS);
+//        // adjustedYaw = angles.firstAngle - initYaw;
+//        adjustedYaw = robotOrientation.getYaw(AngleUnit.RADIANS) - initYaw;
+//
+//        // double zeroedYaw = -initYaw + angles.firstAngle;
+//        double zeroedYaw = -initYaw + robotOrientation.getYaw(AngleUnit.RADIANS);
+//
+//        // Cool vector math to calculate power to the drive motors
+//        x    = leftStickX;
+//        y    = -leftStickY;
+//        turn = rightStickX;
+//
+//        double theta = Math.atan2(y,x); // aka angle
+//
+//        double realTheta = ((2*Math.PI) - zeroedYaw) + theta;
+//
+//        double power = Math.hypot(x,y);
+//
+//        double sin = Math.sin((realTheta) - (Math.PI / 4));
+//        double cos = Math.cos((realTheta) - (Math.PI / 4));
+//        double maxSinCos = Math.max(Math.abs(sin), Math.abs(cos));
+//
+//        // Combine variables to find power and set the intended power
+//        target_leftFront_power  = (power * cos / maxSinCos + turn);
+//        target_leftBack_power   = (power * sin / maxSinCos + turn);
+//        target_rightFront_power = (power * sin / maxSinCos - turn);
+//        target_rightBack_power  = (power * cos / maxSinCos - turn);
+//
+//        if ((power + Math.abs(turn)) > 1.0) // Limit motor's powers to 100%
+//        {
+//            target_leftFront_power  /= power + Math.abs(turn);
+//            target_rightFront_power /= power + Math.abs(turn);
+//            target_leftBack_power   /= power + Math.abs(turn);
+//            target_rightBack_power  /= power + Math.abs(turn);
+//        }
 
         // Cool vector math to calculate power to the drive motors
         x    = leftStickX;
         y    = -leftStickY;
         turn = rightStickX;
 
-        double theta = Math.atan2(y,x); // aka angle
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        double realTheta = ((2*Math.PI) - zeroedYaw) + theta;
+        // Rotate the movement direction counter to the bot's rotation
+        double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
+        double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
 
-        double power = Math.hypot(x,y);
+        rotX = rotX * 1.05; // Counteract Strafing
 
-        double sin = Math.sin((realTheta) - (Math.PI / 4));
-        double cos = Math.cos((realTheta) - (Math.PI / 4));
-        double maxSinCos = Math.max(Math.abs(sin), Math.abs(cos));
-
-        // Combine variables to find power and set the intended power
-        target_leftFront_power  = (power * cos / maxSinCos + turn);
-        target_leftBack_power   = (power * sin / maxSinCos + turn);
-        target_rightFront_power = (power * sin / maxSinCos - turn);
-        target_rightBack_power  = (power * cos / maxSinCos - turn);
-
-        if ((power + Math.abs(turn)) > 1.0) // Limit motor's powers to 100%
-        {
-            target_leftFront_power  /= power + Math.abs(turn);
-            target_rightFront_power /= power + Math.abs(turn);
-            target_leftBack_power   /= power + Math.abs(turn);
-            target_rightBack_power  /= power + Math.abs(turn);
-        }
+        // Max is the largest motor power or 1, limiting all motor's powers to 100%
+        double max = Math.max(Math.abs(rotX) + Math.abs(rotY) + Math.abs(turn), 1);
+        target_leftFront_power  = (rotY + rotX + turn) / max;
+        target_leftBack_power   = (rotY - rotX + turn) / max;
+        target_rightFront_power = (rotY - rotX - turn) / max;
+        target_rightBack_power  = (rotY + rotX - turn) / max;
 
         // Apply acceleration to the motor powers
         leftFront_power  += accel * (target_leftFront_power  - leftFront_power);
