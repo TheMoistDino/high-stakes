@@ -19,11 +19,15 @@ public class MotorControl
 
     ///// Name of Control Motors on Driver Hub
     private static final String intakeName = "intake",
-                                conveyorName = "conveyor",
                                 liftName = "lift";
     /////
 
     ///// Create and Define Motion Variables
+
+    // Intake Variables
+    public double INTAKE_SPEED = 1.0;
+    public enum IntakeDirection {in, out, none}
+
     // Lift Variables
     public int currentLiftPos;
     public int minLiftPos = 0;
@@ -50,14 +54,6 @@ public class MotorControl
     // Initialize the map
     Map<LiftHeight, Integer> liftPositions = new HashMap<>();
 
-    // Arm Variables
-    double armAccel = 0.25;
-    double armPower = 0.0;
-    double max_armPower = 0.3;
-    public int currentArmPos;
-    public enum ArmDirection {forward, backward, setup}
-
-    public boolean isArmRunning = false;
     /////
     private static final double[] liftPIDF = {0.006,0,0,0}; // index 0 = p, 1 = i, 2 = d, 3 = f
     /////
@@ -75,9 +71,7 @@ public class MotorControl
     {
         // Instantiate Motor Objects
         MotorControl.intake = hardwareMap.get(DcMotorEx.class, intakeName);
-        MotorControl.conveyor = hardwareMap.get(DcMotorEx.class, conveyorName);
         MotorControl.lift = hardwareMap.get(DcMotorEx.class, liftName);
-        conveyor.setDirection(DcMotor.Direction.REVERSE);
         // Instantiate Telemetry
         MotorControl.telemetry = telemetry;
         // Initialize the Map for liftPositions
@@ -87,12 +81,10 @@ public class MotorControl
 
         // If the joysticks aren't touched, the robot won't move (set to BRAKE)
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        conveyor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reset Motor Encoders
         intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        conveyor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -105,5 +97,20 @@ public class MotorControl
         telemetry.addData("Motor Status", "Initialized");
     }
 
-
+    // This method is used to activate the intake
+    public void intake(IntakeDirection direction, double SPEED_MULTIPLIER)
+    {
+        if(direction == IntakeDirection.in)
+        {
+            intake.setPower(INTAKE_SPEED * SPEED_MULTIPLIER);
+        }
+        else if (direction == IntakeDirection.out)
+        {
+            intake.setPower(-INTAKE_SPEED * SPEED_MULTIPLIER);
+        }
+        else
+        {
+            intake.setPower(0);
+        }
+    }
 }

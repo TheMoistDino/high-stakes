@@ -39,16 +39,16 @@ public class TeleOp extends LinearOpMode
         servo = new ServoControl(hardwareMap, telemetry);
         //////////////////////
 
-        // For Motor Control (Lady Brown Mech, Intake, Conveyor)
-        // motor = new MotorControl(hardwareMap, telemetry);
+        // For Motor Control (Lady Brown, Intake)
+        motor = new MotorControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Sensor Control (Color Sensor, Distance Sensor)
-        sensor = new SensorControl(hardwareMap, telemetry);
+        // sensor = new SensorControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Camera Control
-        camera = new CameraControl(hardwareMap, telemetry);
+        // camera = new CameraControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Bulk Reading
@@ -63,13 +63,31 @@ public class TeleOp extends LinearOpMode
         // Initialize the map with lambda expressions for each action
         // Toggles
         gamepad.addAction(1, AdvGamepad.GamepadInput.back, AdvGamepad.InputType.onPress, () -> isFieldOriented = !isFieldOriented);
-        gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleClamp());
+        //gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleClamp());
         gamepad.addAction(1, AdvGamepad.GamepadInput.b, AdvGamepad.InputType.onPress, () -> colorSort = !colorSort);
+        gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_down, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.in, 1));
+        gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_up, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.out, 1));
+        gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_left, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
+        gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_right, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
 
+        // Button holds
+        gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onButtonHold, () -> servo.OpenClamp());
 
         telemetry.addData("Robot Status","Ready");
         telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
         telemetry.update();
+
+        while(opModeInInit())
+        {
+            // Clear the cache to avoid memory leaks and other issues (allows for bulk reading)
+            lynxModule.resetCache();
+
+            if(gamepad1.back) {isFieldOriented = !isFieldOriented;}
+
+            telemetry.addData("Robot Status","Initialized");
+            telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
+            telemetry.update();
+        }
 
         // Wait for the play button to be pressed
         waitForStart();
@@ -92,16 +110,17 @@ public class TeleOp extends LinearOpMode
             //////////////////////
 
             // TeleOp Assist
-            sensor.autoClamp();
+            //sensor.autoClamp();
+            servo.CloseClamp();
             //sensor.redColorSort(colorSort);
             //sensor.blueColorSort(colorSort);
-            camera.redColorSort(colorSort);
+            //camera.redColorSort(colorSort);
             //camera.blueColorSort(colorSort);
             //////////////////////
 
             telemetry.addData("Robot Status","TELEOP Running");
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
-            telemetry.addData("Color Sort", colorSort);
+            //telemetry.addData("Color Sort", colorSort);
             telemetry.addData("Clamp Status", ServoControl.isClamp);
 
             telemetry.update();

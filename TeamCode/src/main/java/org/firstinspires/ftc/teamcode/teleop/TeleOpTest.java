@@ -13,11 +13,6 @@ import static org.firstinspires.ftc.teamcode.control.AdvGamepad.GamepadInput.rig
 import static org.firstinspires.ftc.teamcode.control.AdvGamepad.GamepadInput.start;
 import static org.firstinspires.ftc.teamcode.control.AdvGamepad.InputType.onButtonHold;
 import static org.firstinspires.ftc.teamcode.control.AdvGamepad.InputType.onPress;
-import static org.firstinspires.ftc.teamcode.control.MotorControl.ArmDirection.backward;
-import static org.firstinspires.ftc.teamcode.control.MotorControl.ArmDirection.forward;
-import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftDirection.down;
-import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftDirection.up;
-import static org.firstinspires.ftc.teamcode.control.MotorControl.LiftHeight.idle;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

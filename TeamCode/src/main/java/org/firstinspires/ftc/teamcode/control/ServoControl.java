@@ -95,4 +95,46 @@ public class ServoControl
         telemetry.addData("Clamp Status", isClamp ? "Open" : "Closed");
         telemetry.update();
     }
+
+    // This method is used to close the clamp
+    public void CloseClamp()
+    {
+        // Restart timer
+        runtime.reset();
+
+        isClamp = true;
+        clamp.setPosition(clampClose);
+
+        // Give time for the servo to run to position
+        while(runtime.milliseconds() < timeout)
+        {
+            telemetry.addData("Clamp Status", "Running");
+            telemetry.update();
+        }
+
+        // Display Message on Screen
+        telemetry.addData("Clamp Status", isClamp ? "Open" : "Closed");
+        telemetry.update();
+    }
+
+    // This method is used to open the clamp
+    public void OpenClamp()
+    {
+        // Restart timer
+        runtime.reset();
+
+        isClamp = false;
+        clamp.setPosition(clampOpen);
+
+        // Give time for the servo to run to position
+        while(runtime.milliseconds() < timeout)
+        {
+            telemetry.addData("Clamp Status", "Running");
+            telemetry.update();
+        }
+
+        // Display Message on Screen
+        telemetry.addData("Clamp Status", isClamp ? "Open" : "Closed");
+        telemetry.update();
+    }
 }
