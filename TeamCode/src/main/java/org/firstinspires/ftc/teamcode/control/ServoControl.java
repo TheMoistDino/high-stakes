@@ -10,15 +10,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class ServoControl
 {
     ///// Create Servo Variables
-    public static ServoImplEx clamp;
+    public static ServoImplEx clamp, doinker;
     /////
 
     ///// Name of Servos on Driver Hub
-    private static final String clampName = "clamp";
+    private static final String clampName = "clamp", doinkerName = "doinker";
     /////
 
     ///// Create and Define Motion Variables
-    public static boolean isClamp;
+    public static boolean isClamp, doinkerDown;
     static final double clampOpen = 0.35,
                         clampClose = 0.50;
     /////
@@ -37,6 +37,8 @@ public class ServoControl
     {
         // Instantiate Servo Objects
         ServoControl.clamp = hardwareMap.get(ServoImplEx.class, clampName);
+        // ServoControl.doinker = hardwareMap.get(ServoImplEx.class, doinkerName);
+
         // Instantiate Telemetry
         ServoControl.telemetry = telemetry;
 
@@ -55,6 +57,7 @@ public class ServoControl
     {
         // Enable servo power
         clamp.setPwmEnable();
+        // doinker.setPwmEnable();
 
         // Start the servos in initial position
         clamp.setPosition(clampOpen);
@@ -69,6 +72,7 @@ public class ServoControl
     {
         // Disable servo power
         clamp.setPwmDisable();
+        // doinker.setPwmDisable();
 
         // Display Message on Screen
         telemetry.addData("Servo Status", "Stopped");

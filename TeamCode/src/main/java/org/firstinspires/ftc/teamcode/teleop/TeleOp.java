@@ -27,7 +27,6 @@ public class TeleOp extends LinearOpMode
     boolean isFieldOriented = false;
     boolean colorSort = true;
 
-
     @Override
     public void runOpMode() throws InterruptedException
     {
@@ -64,11 +63,12 @@ public class TeleOp extends LinearOpMode
         // Toggles
         gamepad.addAction(1, AdvGamepad.GamepadInput.back, AdvGamepad.InputType.onPress, () -> isFieldOriented = !isFieldOriented);
         //gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleClamp());
-        gamepad.addAction(1, AdvGamepad.GamepadInput.b, AdvGamepad.InputType.onPress, () -> colorSort = !colorSort);
+        gamepad.addAction(1, AdvGamepad.GamepadInput.x, AdvGamepad.InputType.onPress, () -> colorSort = !colorSort);
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_down, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.in, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_up, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.out, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_left, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_right, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
+
 
         // Button holds
         gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onButtonHold, () -> servo.OpenClamp());
