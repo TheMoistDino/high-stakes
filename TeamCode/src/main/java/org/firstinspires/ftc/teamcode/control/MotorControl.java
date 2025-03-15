@@ -14,7 +14,7 @@ import java.util.Map;
 public class MotorControl
 {
     ///// Create Motor Variables
-    public static DcMotorEx intake, conveyor, lift;
+    public static DcMotorEx intake, lift;
     /////
 
     ///// Name of Control Motors on Driver Hub
@@ -87,6 +87,7 @@ public class MotorControl
         intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
+        intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         // Set PIDControllers to the variables in the array

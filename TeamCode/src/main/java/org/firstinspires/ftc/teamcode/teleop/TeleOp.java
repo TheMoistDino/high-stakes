@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.AdvGamepad;
 import org.firstinspires.ftc.teamcode.control.CameraControl;
@@ -26,6 +27,8 @@ public class TeleOp extends LinearOpMode
     // Misc Variables
     boolean isFieldOriented = false;
     boolean colorSort = true;
+    ElapsedTime runtime;
+    double timeout = 100;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -62,7 +65,7 @@ public class TeleOp extends LinearOpMode
         // Initialize the map with lambda expressions for each action
         // Toggles
         gamepad.addAction(1, AdvGamepad.GamepadInput.back, AdvGamepad.InputType.onPress, () -> isFieldOriented = !isFieldOriented);
-        //gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleClamp());
+        gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleClamp());
         gamepad.addAction(1, AdvGamepad.GamepadInput.x, AdvGamepad.InputType.onPress, () -> colorSort = !colorSort);
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_down, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.in, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_up, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.out, 1));
@@ -71,7 +74,7 @@ public class TeleOp extends LinearOpMode
 
 
         // Button holds
-        gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onButtonHold, () -> servo.OpenClamp());
+        //gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onButtonHold, () -> servo.OpenClamp());
 
         telemetry.addData("Robot Status","Ready");
         telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
@@ -82,7 +85,15 @@ public class TeleOp extends LinearOpMode
             // Clear the cache to avoid memory leaks and other issues (allows for bulk reading)
             lynxModule.resetCache();
 
-            if(gamepad1.back) {isFieldOriented = !isFieldOriented;}
+            if(gamepad1.back)
+            {
+                isFieldOriented = !isFieldOriented;
+                while(runtime.milliseconds() < timeout)
+                {
+                    telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
+                    telemetry.update();
+                }
+            }
 
             telemetry.addData("Robot Status","Initialized");
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
@@ -111,7 +122,7 @@ public class TeleOp extends LinearOpMode
 
             // TeleOp Assist
             //sensor.autoClamp();
-            servo.CloseClamp();
+            //servo.CloseClamp();
             //sensor.redColorSort(colorSort);
             //sensor.blueColorSort(colorSort);
             //camera.redColorSort(colorSort);

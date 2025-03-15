@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -21,6 +22,8 @@ public class CameraControl
 
     ///// Extra variables
     static Telemetry telemetry;
+    ElapsedTime runtime;
+    double timeout = 500;
     /////
 
     public CameraControl(HardwareMap hardwareMap, Telemetry telemetry)
@@ -56,12 +59,13 @@ public class CameraControl
         telemetry.addLine(String.format("R %3d, G %3d, B %3d", Color.red(result.rgb), Color.green(result.rgb), Color.blue(result.rgb)));
     }
 
-    public void redColorSort(boolean colorSort)
+    public void redColorSort(boolean colorSort, MotorControl motor)
     {
         updateColor();
         if((result.closestSwatch == PredominantColorProcessor.Swatch.RED) && colorSort)
         {
             telemetry.addData("Color Sort", "RED");
+            reject(motor);
         }
         else
         {
@@ -69,16 +73,27 @@ public class CameraControl
         }
     }
 
-    public void blueColorSort(boolean colorSort)
+    public void blueColorSort(boolean colorSort, MotorControl motor)
     {
         updateColor();
         if((result.closestSwatch == PredominantColorProcessor.Swatch.BLUE) && colorSort)
         {
             telemetry.addData("Color Sort", "BLUE");
+            reject(motor);
         }
         else
         {
             telemetry.addData("Color Sort", "NONE");
         }
+    }
+
+    void reject(MotorControl motor)
+    {
+        motor.intake(MotorControl.IntakeDirection.none, 1);
+        while(runtime.milliseconds() < timeout)
+        {
+            telemetry.addData("Color Sort", "REJECTING");
+        }
+        motor.intake(MotorControl.IntakeDirection.in, 1);
     }
 }
