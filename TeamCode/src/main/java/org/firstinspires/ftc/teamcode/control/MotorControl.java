@@ -113,5 +113,7 @@ public class MotorControl
         {
             intake.setPower(0);
         }
+
+        telemetry.addData("Intake Status", direction);
     }
 }

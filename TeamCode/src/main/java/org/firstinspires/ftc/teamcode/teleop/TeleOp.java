@@ -132,7 +132,8 @@ public class TeleOp extends LinearOpMode
             telemetry.addData("Robot Status","TELEOP Running");
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
             //telemetry.addData("Color Sort", colorSort);
-            telemetry.addData("Clamp Status", ServoControl.isClamp);
+            telemetry.addData("Clamp Status", servo.isClamp);
+            telemetry.addData("Intake Speed", motor.intake.getVelocity());
 
             telemetry.update();
         }
