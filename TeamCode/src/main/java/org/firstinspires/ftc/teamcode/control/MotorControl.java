@@ -25,7 +25,7 @@ public class MotorControl
     ///// Create and Define Motion Variables
 
     // Intake Variables
-    public double INTAKE_SPEED = 1.0;
+    public static double INTAKE_SPEED = 1.0;
     public enum IntakeDirection {in, out, none}
 
     // Lift Variables
@@ -59,7 +59,7 @@ public class MotorControl
     /////
 
     ///// Create and Define Timer Variables to let the motors have time to run to position
-    private final ElapsedTime runtime = new ElapsedTime();
+    private static final ElapsedTime runtime = new ElapsedTime();
     /////
 
     ///// Extra variables
@@ -99,7 +99,7 @@ public class MotorControl
     }
 
     // This method is used to activate the intake
-    public void intake(IntakeDirection direction, double SPEED_MULTIPLIER)
+    public static void intake(IntakeDirection direction, double SPEED_MULTIPLIER)
     {
         if(direction == IntakeDirection.in)
         {
@@ -115,5 +115,16 @@ public class MotorControl
         }
 
         telemetry.addData("Intake Status", direction);
+    }
+
+    // This method is used to reject a wrong colored game element
+    public static void reject()
+    {
+        intake(IntakeDirection.none, 1);
+        while(runtime.milliseconds() < 500)
+        {
+            telemetry.addData("Color Sort", "REJECTING");
+        }
+        intake(IntakeDirection.in, 1);
     }
 }

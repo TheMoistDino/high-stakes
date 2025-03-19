@@ -26,7 +26,8 @@ public class SensorControl
     /////
 
     ///// Create Color Variables
-    public static int[] color1 = new int[3], color2 = new int[3];;
+    public static int[] color1 = new int[3], color2 = new int[3]; // [red, green, blue]
+    static double color_threshold = 20;
     /////
 
     ///// Create and Define Timer Variables
@@ -99,21 +100,39 @@ public class SensorControl
     public void redColorSort(boolean colorSort)
     {
         updateColor();
-        if(((color1[0] > (color1[1] - 20) && color1[0] > (color1[2] - 20))  // Check if color 1 is red
-                && (color2[0] > (color2[1] - 20) && color2[0] > (color2[2] - 20))) && colorSort)  // Check if color 2 is also red
+        if(isRedDetected(color1) && isRedDetected(color2) && colorSort)  // Check if color 1 & 2 are red
         {
             telemetry.addData("Color Sort", "RED");
+            MotorControl.reject();
+        }
+        else
+        {
+            telemetry.addData("Color Sort", "NONE");
         }
     }
 
     public void blueColorSort(boolean colorSort)
     {
         updateColor();
-        if(((color1[2] > (color1[0] - 20) && color1[2] > (color1[1] - 20))  // Check if color 1 is red
-                && (color2[2] > (color2[0] - 20) && color2[2] > (color2[1] - 20))) && colorSort)  // Check if color 2 is also red
+        if(isBlueDetected(color1) && isBlueDetected(color2) && colorSort)  // Check if color 1 & 2 are blue
         {
             telemetry.addData("Color Sort", "BLUE");
+            MotorControl.reject();
         }
+        else
+        {
+            telemetry.addData("Color Sort", "NONE");
+        }
+    }
+
+    // Helper method to check if a color is red
+    private boolean isRedDetected(int[] color) {
+        return color[0] > (color[1] - color_threshold) && color[0] > (color[2] - color_threshold);
+    }
+
+    // Helper method to check if a color is blue
+    private boolean isBlueDetected(int[] color) {
+        return color[2] > (color[0] - color_threshold) && color[2] > (color[1] - color_threshold);
     }
 
 }
