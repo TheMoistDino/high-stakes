@@ -14,7 +14,7 @@ import java.util.Map;
 public class MotorControl
 {
     ///// Create Motor Variables
-    public static DcMotorEx intake, lift;
+    public static DcMotorEx intakeMotor, lift;
     /////
 
     ///// Name of Control Motors on Driver Hub
@@ -70,7 +70,7 @@ public class MotorControl
     public MotorControl(HardwareMap hardwareMap, Telemetry telemetry)
     {
         // Instantiate Motor Objects
-        MotorControl.intake = hardwareMap.get(DcMotorEx.class, intakeName);
+        MotorControl.intakeMotor = hardwareMap.get(DcMotorEx.class, intakeName);
         MotorControl.lift = hardwareMap.get(DcMotorEx.class, liftName);
         // Instantiate Telemetry
         MotorControl.telemetry = telemetry;
@@ -80,14 +80,16 @@ public class MotorControl
         liftPositions.put(LiftHeight.score, score_pos);
 
         // If the joysticks aren't touched, the robot won't move (set to BRAKE)
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        intakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
+
         // Reset Motor Encoders
-        intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        intakeMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         // Set PIDControllers to the variables in the array
@@ -103,15 +105,15 @@ public class MotorControl
     {
         if(direction == IntakeDirection.in)
         {
-            intake.setPower(INTAKE_SPEED * SPEED_MULTIPLIER);
+            intakeMotor.setPower(INTAKE_SPEED * SPEED_MULTIPLIER);
         }
         else if (direction == IntakeDirection.out)
         {
-            intake.setPower(-INTAKE_SPEED * SPEED_MULTIPLIER);
+            intakeMotor.setPower(-INTAKE_SPEED * SPEED_MULTIPLIER);
         }
         else
         {
-            intake.setPower(0);
+            intakeMotor.setPower(0);
         }
 
         telemetry.addData("Intake Status", direction);

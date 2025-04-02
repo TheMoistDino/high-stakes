@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.control.LynxModuleControl;
 import org.firstinspires.ftc.teamcode.control.MotorControl;
 import org.firstinspires.ftc.teamcode.control.SensorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
+import org.firstinspires.ftc.teamcode.util.ColorSortManager;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends LinearOpMode
@@ -22,13 +23,15 @@ public class TeleOp extends LinearOpMode
     CameraControl camera;
     LynxModuleControl lynxModule;
     AdvGamepad gamepad;
+    ColorSortManager colorSortManager;
     //////////////////////
 
     // Misc Variables
     boolean isFieldOriented = false;
     boolean colorSort = true;
-    ElapsedTime runtime;
-    double timeout = 100;
+    ElapsedTime runtime = new ElapsedTime(),
+                clampTimer = new ElapsedTime();
+    double timeout = 100, clampTimeout = 5000;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -46,7 +49,7 @@ public class TeleOp extends LinearOpMode
         //////////////////////
 
         // For Sensor Control (Color Sensor, Distance Sensor)
-        // sensor = new SensorControl(hardwareMap, telemetry);
+        sensor = new SensorControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Camera Control
@@ -62,16 +65,20 @@ public class TeleOp extends LinearOpMode
         gamepad = new AdvGamepad(gamepad1, gamepad2);
         //////////////////////
 
+        // For Color Sort Manager
+        colorSortManager = new ColorSortManager();
+        //////////////////////
+
         // Initialize the map with lambda expressions for each action
         // Toggles
         gamepad.addAction(1, AdvGamepad.GamepadInput.back, AdvGamepad.InputType.onPress, () -> isFieldOriented = !isFieldOriented);
         gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleClamp());
-        gamepad.addAction(1, AdvGamepad.GamepadInput.x, AdvGamepad.InputType.onPress, () -> colorSort = !colorSort);
+        gamepad.addAction(1, AdvGamepad.GamepadInput.x, AdvGamepad.InputType.onPress, () -> colorSortManager.toggleColorSort());
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_down, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.in, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_up, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.out, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_left, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_right, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
-
+        gamepad.addAction(1, AdvGamepad.GamepadInput.left_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleDoinker());
 
         // Button holds
         //gamepad.addAction(1, AdvGamepad.GamepadInput.right_bumper, AdvGamepad.InputType.onButtonHold, () -> servo.OpenClamp());
@@ -95,7 +102,7 @@ public class TeleOp extends LinearOpMode
                 }
             }
 
-            telemetry.addData("Robot Status","Initialized");
+            telemetry.addData("Robot Status","Ready & Initialized");
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
             telemetry.update();
         }
@@ -105,6 +112,9 @@ public class TeleOp extends LinearOpMode
 
         // Start servos after the play button is pressed to avoid movement between AUTO and TELEOP periods
         servo.StartServos();
+
+        // Reset the clamp timer
+        clampTimer.reset();
 
         while(opModeIsActive())
         {
@@ -122,7 +132,20 @@ public class TeleOp extends LinearOpMode
 
             // TeleOp Assist
             //sensor.autoClamp();
-            //servo.CloseClamp();
+            if(servo.isClamp && clampTimer.milliseconds() > clampTimeout)
+            {
+                servo.CloseClamp();
+                clampTimer.reset();
+            }
+
+//            if (colorSortManager.isRedColorSortActive()) {
+//                sensor.redColorSort(true); // Assuming you have a redColorSort method
+//                sensor.blueColorSort(false);
+//            } else {
+//                sensor.redColorSort(false);
+//                sensor.blueColorSort(true); // Assuming you have a blueColorSort method
+//            }
+
             //sensor.redColorSort(colorSort);
             //sensor.blueColorSort(colorSort);
             //camera.redColorSort(colorSort);
@@ -133,7 +156,8 @@ public class TeleOp extends LinearOpMode
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
             //telemetry.addData("Color Sort", colorSort);
             telemetry.addData("Clamp Status", servo.isClamp);
-            telemetry.addData("Intake Speed", motor.intake.getVelocity());
+            telemetry.addData("Doinker Status", servo.isDoinkerDown);
+            telemetry.addData("Intake Speed", motor.intakeMotor.getVelocity());
 
             telemetry.update();
         }

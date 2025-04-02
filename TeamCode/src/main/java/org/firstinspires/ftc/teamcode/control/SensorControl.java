@@ -55,7 +55,6 @@ public class SensorControl
 
         // Display Message on Screen
         telemetry.addData("Sensor Status", "Initialized");
-
     }
 
     public void updateColor()

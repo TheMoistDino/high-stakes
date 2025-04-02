@@ -7,7 +7,7 @@ This repository includes the source code used in 6373 SuperBots' competition rob
 The competition is the VEX High Stakes game, but the robots are built to FTC construction guidelines.
 
 # Requirements
-To use this Android Studio project, you will need Android Studio 2024.3.1 (codename Meerkat) or later.
+To use this Android Studio project, you will need Android Studio 2024.2.2 (codename Ladybug) or later.
 
 # Robot Controls
 ## Gamepad 1
@@ -19,4 +19,5 @@ To use this Android Studio project, you will need Android Studio 2024.3.1 (coden
 - D-Pad Down = Intake
 - D-Pad Left / D-Pad Right = Stop Intake
 
+- Left Bumper = Toggle Doinker
 - Right Bumper = Open Clamp

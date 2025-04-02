@@ -76,8 +76,8 @@ public class TeleOpTest extends LinearOpMode
         gamepad.addAction(2, start, onPress, () -> liftSlow = !liftSlow);
         gamepad.addAction(2, b, onPress, () -> liftDebug = !liftDebug);
         gamepad.addAction(2, back, onPress, () -> {
-            MotorControl.intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            MotorControl.intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            MotorControl.intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            MotorControl.intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         });
 
         // Presets
@@ -154,7 +154,7 @@ public class TeleOpTest extends LinearOpMode
 
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
             telemetry.addData("Driving Speed", driveSlow ? "50%" : "100%");
-            telemetry.addData("Lift Position", MotorControl.intake.getCurrentPosition());
+            telemetry.addData("Lift Position", MotorControl.intakeMotor.getCurrentPosition());
             telemetry.addData("Lift Debug Mode", liftDebug ? "On" : "Off");
             telemetry.addData("Lift Speed", liftSlow ? "50%" : "100%");
             telemetry.addData("Arm Position", MotorControl.lift.getCurrentPosition());

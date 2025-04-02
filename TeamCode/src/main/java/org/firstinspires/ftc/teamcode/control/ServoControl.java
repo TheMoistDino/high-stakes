@@ -18,9 +18,11 @@ public class ServoControl
     /////
 
     ///// Create and Define Motion Variables
-    public static boolean isClamp, doinkerDown;
+    public static boolean isClamp, isDoinkerDown;
     static final double clampOpen = 0.35,
                         clampClose = 0.50;
+    static final double doinkerUp = 0.2,
+                        doinkerDown = 1.0;
     /////
 
     ///// Create and Define Timer Variables to let the servos have time to run to position
@@ -37,7 +39,7 @@ public class ServoControl
     {
         // Instantiate Servo Objects
         ServoControl.clamp = hardwareMap.get(ServoImplEx.class, clampName);
-        // ServoControl.doinker = hardwareMap.get(ServoImplEx.class, doinkerName);
+        ServoControl.doinker = hardwareMap.get(ServoImplEx.class, doinkerName);
 
         // Instantiate Telemetry
         ServoControl.telemetry = telemetry;
@@ -57,11 +59,12 @@ public class ServoControl
     {
         // Enable servo power
         clamp.setPwmEnable();
-        // doinker.setPwmEnable();
+        doinker.setPwmEnable();
 
         // Start the servos in initial position
         clamp.setPosition(clampOpen);
         isClamp = false;
+        doinker.setPosition(doinkerUp);
 
         // Display Message on Screen
         telemetry.addData("Servo Status", "Started");
@@ -72,7 +75,7 @@ public class ServoControl
     {
         // Disable servo power
         clamp.setPwmDisable();
-        // doinker.setPwmDisable();
+        doinker.setPwmDisable();
 
         // Display Message on Screen
         telemetry.addData("Servo Status", "Stopped");
@@ -139,6 +142,28 @@ public class ServoControl
 
         // Display Message on Screen
         telemetry.addData("Clamp Status", isClamp ? "Open" : "Closed");
+        telemetry.update();
+    }
+
+    // This method is used to toggle the doinker
+    public void ToggleDoinker()
+    {
+        // Restart timer
+        runtime.reset();
+
+        // Open/close clamp
+        isDoinkerDown = !isDoinkerDown;
+        doinker.setPosition(isDoinkerDown ? doinkerDown : doinkerUp);
+
+        // Give time for the servo to run to position
+        while(runtime.milliseconds() < timeout)
+        {
+            telemetry.addData("Doinker Status", "Running");
+            telemetry.update();
+        }
+
+        // Display Message on Screen
+        telemetry.addData("Doinker Status", isDoinkerDown ? "Down" : "Up");
         telemetry.update();
     }
 }
