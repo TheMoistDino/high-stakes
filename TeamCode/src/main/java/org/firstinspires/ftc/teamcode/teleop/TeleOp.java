@@ -132,11 +132,6 @@ public class TeleOp extends LinearOpMode
 
             // TeleOp Assist
             //sensor.autoClamp();
-            if(servo.isClamp && clampTimer.milliseconds() > clampTimeout)
-            {
-                servo.CloseClamp();
-                clampTimer.reset();
-            }
 
 //            if (colorSortManager.isRedColorSortActive()) {
 //                sensor.redColorSort(true); // Assuming you have a redColorSort method

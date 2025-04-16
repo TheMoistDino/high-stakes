@@ -21,9 +21,9 @@ public class servoTuner extends OpMode {
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        servo = hardwareMap.get(ServoImplEx.class, "doinker");
+        servo = hardwareMap.get(ServoImplEx.class, "clamp");
     
-        //servo.setPwmRange(new PwmControl.PwmRange(500,2500));
+        servo.setPwmRange(new PwmControl.PwmRange(500,2500));
     }
 
     @Override

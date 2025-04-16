@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -14,14 +13,13 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.control.MotorControl;
 import org.firstinspires.ftc.teamcode.control.SensorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
-@Autonomous(name = "Test Autonomous", group = "Auto", preselectTeleOp = "TeleOp")
-public class AutoTest extends LinearOpMode
+@Autonomous(name = "Blue Left", group = "Auto", preselectTeleOp = "TeleOp")
+public class BlueLeft extends LinearOpMode
 {
     // Variables used for Method Calling
     MotorControl motor;
@@ -92,20 +90,20 @@ public class AutoTest extends LinearOpMode
         Clamp clamp = new Clamp();
         Intake intake = new Intake();
 
-        Pose2d firstPose = new Pose2d(-52, -24, Math.toRadians(-180));
-        Pose2d secondPose = new Pose2d(-32, -24, Math.toRadians(-180));
-        Pose2d thirdPose = new Pose2d(-48, -24, Math.toRadians(-45));
+        Pose2d firstPose = new Pose2d(52, -24, Math.toRadians(0));
+        Pose2d secondPose = new Pose2d(32, -24, Math.toRadians(0));
+        Pose2d thirdPose = new Pose2d(48, -24, Math.toRadians(-135));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, firstPose);
 
         TrajectoryActionBuilder step1 = drive.actionBuilder(firstPose)
-                .lineToX(-32)
+                .lineToX(32)
                 .waitSeconds(0.3);
         TrajectoryActionBuilder step2 = drive.actionBuilder(secondPose)
-                .lineToXLinearHeading(-48, Math.toRadians(-45));
+                .lineToXLinearHeading(48, Math.toRadians(-135));
         TrajectoryActionBuilder step3 = drive.actionBuilder(thirdPose)
                 .lineToY(-36)
-                .lineToY(-45, new TranslationalVelConstraint(10));
+                .lineToY(-50, new TranslationalVelConstraint(10));
 
 
         /////////////////////////

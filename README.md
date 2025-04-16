@@ -13,11 +13,10 @@ To use this Android Studio project, you will need Android Studio 2024.2.2 (coden
 ## Gamepad 1
 - Left and Right Joysticks = Movement (left for translational, right for rotational)
 - Back = Toggle Robot-Oriented to Field-Oriented Drive
-- X = Toggle Color Sort
 
 - D-Pad Up = Outtake
 - D-Pad Down = Intake
 - D-Pad Left / D-Pad Right = Stop Intake
 
 - Left Bumper = Toggle Doinker
-- Right Bumper = Open Clamp
+- Right Bumper = Toggle Clamp

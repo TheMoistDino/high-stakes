@@ -19,15 +19,15 @@ public class ServoControl
 
     ///// Create and Define Motion Variables
     public static boolean isClamp, isDoinkerDown;
-    static final double clampOpen = 0.35,
-                        clampClose = 0.50;
+    static final double clampOpen = 0.78,
+                        clampClose = 0.0;
     static final double doinkerUp = 0.2,
                         doinkerDown = 1.0;
     /////
 
     ///// Create and Define Timer Variables to let the servos have time to run to position
     private final ElapsedTime runtime = new ElapsedTime();
-    double timeout = 250;
+    double timeout = 600;
     /////
 
     ///// Extra variables
@@ -84,6 +84,8 @@ public class ServoControl
     // This method is used to toggle the clamp
     public void ToggleClamp()
     {
+        // Start sending power to clamp
+        //clamp.setPwmEnable();
         // Restart timer
         runtime.reset();
 
@@ -101,6 +103,9 @@ public class ServoControl
         // Display Message on Screen
         telemetry.addData("Clamp Status", isClamp ? "Open" : "Closed");
         telemetry.update();
+
+        // Stop sending power to clamp
+        //clamp.setPwmDisable();
     }
 
     // This method is used to close the clamp

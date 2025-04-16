@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -14,14 +13,13 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.control.MotorControl;
 import org.firstinspires.ftc.teamcode.control.SensorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
-@Autonomous(name = "Test Autonomous", group = "Auto", preselectTeleOp = "TeleOp")
-public class AutoTest extends LinearOpMode
+@Autonomous(name = "Red Right", group = "Auto", preselectTeleOp = "TeleOp")
+public class RedRight extends LinearOpMode
 {
     // Variables used for Method Calling
     MotorControl motor;
@@ -105,7 +103,7 @@ public class AutoTest extends LinearOpMode
                 .lineToXLinearHeading(-48, Math.toRadians(-45));
         TrajectoryActionBuilder step3 = drive.actionBuilder(thirdPose)
                 .lineToY(-36)
-                .lineToY(-45, new TranslationalVelConstraint(10));
+                .lineToY(-50, new TranslationalVelConstraint(10));
 
 
         /////////////////////////
