@@ -22,12 +22,16 @@ public class SensorControl
     ///// Name of Sensors on Driver Hub
     private static final String colorSensor1Name = "colorSensor1",
                                 colorSensor2Name = "colorSensor2";
-    private static final String distanceSensorName = "distanceSensor";
+    private static final String distanceSensorName = "distance";
     /////
 
     ///// Create Color Variables
     public static int[] color1 = new int[3], color2 = new int[3]; // [red, green, blue]
     static double color_threshold = 20;
+    /////
+
+    ///// Distance Variables
+    private final double maxDistance = 2.0;
     /////
 
     ///// Create and Define Timer Variables
@@ -55,6 +59,16 @@ public class SensorControl
 
         // Display Message on Screen
         telemetry.addData("Sensor Status", "Initialized");
+    }
+
+    public void updateDistance()
+    {
+        telemetry.addData("Distance", distanceSensor.getDistance(DistanceUnit.CM));
+    }
+
+    public boolean checkDistance()
+    {
+        return (distanceSensor.getDistance(DistanceUnit.CM) < maxDistance);
     }
 
     public void updateColor()

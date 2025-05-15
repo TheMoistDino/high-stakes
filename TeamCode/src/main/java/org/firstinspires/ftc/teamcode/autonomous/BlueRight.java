@@ -91,13 +91,13 @@ public class BlueRight extends LinearOpMode
         Intake intake = new Intake();
 
         Pose2d firstPose = new Pose2d(52, 24, Math.toRadians(0));
-        Pose2d secondPose = new Pose2d(32, 24, Math.toRadians(0));
+        Pose2d secondPose = new Pose2d(29, 24, Math.toRadians(0));
         Pose2d thirdPose = new Pose2d(48, 24, Math.toRadians(135));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, firstPose);
 
         TrajectoryActionBuilder step1 = drive.actionBuilder(firstPose)
-                .lineToX(32)
+                .lineToX(29)
                 .waitSeconds(0.3);
         TrajectoryActionBuilder step2 = drive.actionBuilder(secondPose)
                 .lineToXLinearHeading(48, Math.toRadians(135));

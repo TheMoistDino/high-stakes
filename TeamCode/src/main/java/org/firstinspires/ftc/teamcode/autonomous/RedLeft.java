@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.control.MotorControl;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.control.SensorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
+@Disabled
 @Autonomous(name = "Red Left", group = "Auto", preselectTeleOp = "TeleOp")
 public class RedLeft extends LinearOpMode
 {

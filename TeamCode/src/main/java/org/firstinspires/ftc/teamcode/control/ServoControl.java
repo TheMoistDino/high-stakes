@@ -19,10 +19,10 @@ public class ServoControl
 
     ///// Create and Define Motion Variables
     public static boolean isClamp, isDoinkerDown;
-    static final double clampOpen = 0.78,
-                        clampClose = 0.0;
+    static final double clampOpen = 0.92,
+                        clampClose = 0.08;
     static final double doinkerUp = 0.2,
-                        doinkerDown = 1.0;
+                        doinkerDown = 0.85;
     /////
 
     ///// Create and Define Timer Variables to let the servos have time to run to position

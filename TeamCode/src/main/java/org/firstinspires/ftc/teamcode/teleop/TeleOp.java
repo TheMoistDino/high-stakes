@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.control.AdvGamepad;
 import org.firstinspires.ftc.teamcode.control.CameraControl;
 import org.firstinspires.ftc.teamcode.control.HolonomicDrive;
@@ -49,7 +50,7 @@ public class TeleOp extends LinearOpMode
         //////////////////////
 
         // For Sensor Control (Color Sensor, Distance Sensor)
-        sensor = new SensorControl(hardwareMap, telemetry);
+        //sensor = new SensorControl(hardwareMap, telemetry);
         //////////////////////
 
         // For Camera Control
@@ -78,6 +79,7 @@ public class TeleOp extends LinearOpMode
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_up, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.out, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_left, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.dpad_right, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
+        gamepad.addAction(1, AdvGamepad.GamepadInput.b, AdvGamepad.InputType.onPress, () -> motor.intake(MotorControl.IntakeDirection.none, 1));
         gamepad.addAction(1, AdvGamepad.GamepadInput.left_bumper, AdvGamepad.InputType.onPress, () -> servo.ToggleDoinker());
 
         // Button holds
@@ -104,6 +106,7 @@ public class TeleOp extends LinearOpMode
 
             telemetry.addData("Robot Status","Ready & Initialized");
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");
+            // telemetry.addData("Distance", sensor.distanceSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
 
@@ -146,6 +149,8 @@ public class TeleOp extends LinearOpMode
             //camera.redColorSort(colorSort);
             //camera.blueColorSort(colorSort);
             //////////////////////
+
+            //sensor.updateDistance();
 
             telemetry.addData("Robot Status","TELEOP Running");
             telemetry.addData("Driving Mode", isFieldOriented ? "Field-Oriented" : "Robot-Oriented");

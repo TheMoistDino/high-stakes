@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -12,7 +13,6 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.control.MotorControl;
@@ -20,9 +20,8 @@ import org.firstinspires.ftc.teamcode.control.SensorControl;
 import org.firstinspires.ftc.teamcode.control.ServoControl;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
-@Disabled
 @Autonomous(name = "Red Right", group = "Auto", preselectTeleOp = "TeleOp")
-public class RedRight extends LinearOpMode
+public class RedRight2 extends LinearOpMode
 {
     // Variables used for Method Calling
     MotorControl motor;
@@ -108,28 +107,31 @@ public class RedRight extends LinearOpMode
         Doinker doinker = new Doinker();
         Intake intake = new Intake();
 
-        Pose2d firstPose = new Pose2d(-52, -24, Math.toRadians(-180));
-        Pose2d secondPose = new Pose2d(-32, -24, Math.toRadians(-180));
-        Pose2d thirdPose = new Pose2d(-48, -24, Math.toRadians(-45));
-        Pose2d fourthPose = new Pose2d(-18, -54, Math.toRadians(-45));
-        Pose2d fifthPose = new Pose2d(-60, -44, Math.toRadians(-90));
-
+        Pose2d firstPose = new Pose2d(-62, -24, Math.toRadians(0));
+        Pose2d secondPose = new Pose2d(-61,0,Math.toRadians(0));
+        Pose2d thirdPose = new Pose2d(-28,-21,Math.toRadians(-210));
+        Pose2d fourthPose = new Pose2d(-48, -24, Math.toRadians(-45));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, firstPose);
 
         TrajectoryActionBuilder step1 = drive.actionBuilder(firstPose)
-                .lineToX(-32)
-                .waitSeconds(0.3);
+                .lineToX(-60)
+                .strafeToConstantHeading(new Vector2d(-60, 0))
+                .waitSeconds(0.1)
+                .lineToX(-61);
         TrajectoryActionBuilder step2 = drive.actionBuilder(secondPose)
-                .lineToXLinearHeading(-48, Math.toRadians(-45));
+                .lineToX(-55)
+                .turnTo(Math.toRadians(-210))
+                .strafeToLinearHeading(new Vector2d(-28,-21),Math.toRadians(-210))
+                .waitSeconds(0.5);
         TrajectoryActionBuilder step3 = drive.actionBuilder(thirdPose)
-                .lineToY(-36)
-                .lineToY(-54, new TranslationalVelConstraint(10));
+                .strafeToLinearHeading(new Vector2d(-48,-24), Math.toRadians(-45));
         TrajectoryActionBuilder step4 = drive.actionBuilder(fourthPose)
-                .strafeToLinearHeading(new Vector2d(-60, -44), Math.toRadians(-90));
-        TrajectoryActionBuilder step5 = drive.actionBuilder(fifthPose)
-                .lineToY(-52, new TranslationalVelConstraint(10))
-                .strafeTo(new Vector2d(-30, -52), new TranslationalVelConstraint(15));
+                .lineToY(-36)
+                .lineToY(-53, new TranslationalVelConstraint(10))
+                .waitSeconds(0.5)
+                .lineToY(-48, new TranslationalVelConstraint(10));
+
 
         /////////////////////////
 
@@ -146,18 +148,21 @@ public class RedRight extends LinearOpMode
                 new SequentialAction
                 (
                         step1.build(),
-                        clamp.toggle(),
-                        new SleepAction(0.2),
-                        step2.build(),
-                        new SleepAction(0.2),
-                        intake.in(),
-                        step3.build(),
-                        new SleepAction(2.0),
+                        new ParallelAction(
+                                new SleepAction(0.5),
+                                intake.in()
+                        ),
                         intake.stop(),
+                        step2.build(),
+                        clamp.toggle(),
+                        step3.build(),
+                        intake.in(),
                         step4.build(),
-                        doinker.toggle(),
-                        new SleepAction(0.2),
-                        step5.build()
+                        new SleepAction(1.0),
+                        new ParallelAction(
+                                intake.stop(),
+                                clamp.toggle()
+                        )
                 )
         );
 
